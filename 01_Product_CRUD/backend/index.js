@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json()); // allows to accept JSON data in req.body
 
 
-app.use("/api/products",productRoutes)
+app.use("/api/products", productRoutes)
 
 
 
