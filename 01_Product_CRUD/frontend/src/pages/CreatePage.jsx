@@ -5,9 +5,11 @@ import {
   Heading,
   Input,
   useColorModeValue,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { useProductStore } from "../store/product";
 
 const CreatePage = () => {
   const [newProduct, setNewProduct] = useState({
@@ -16,10 +18,30 @@ const CreatePage = () => {
     image: "",
   });
 
-  const handleAddProduct = ()=>{
-    console.log(newProduct);
-  }
+  const toast = useToast();
 
+  const { createProduct } = useProductStore();
+  const handleAddProduct = async () => {
+    const { success, message } = await createProduct(newProduct);
+    if (!success) {
+      toast({
+        title: "Error",
+        description: message,
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: message,
+        status: "success",
+        duration: 4000,
+        isClosable: true,
+      });
+    }
+    setNewProduct({name: "", price: "", image: ""});
+  };
 
   return (
     <Container maxW={"container.sm"}>
@@ -61,11 +83,7 @@ const CreatePage = () => {
               }
             />
 
-            <Button
-              colorScheme="blue"
-              onClick={handleAddProduct}
-              w={"full"}
-            >
+            <Button colorScheme="blue" onClick={handleAddProduct} w={"full"}>
               Add Product
             </Button>
           </VStack>
